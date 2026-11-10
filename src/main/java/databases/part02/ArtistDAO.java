@@ -40,12 +40,12 @@ public class ArtistDAO {
     public List<Artist> getArtists() {
         List<Artist> artists = new ArrayList<>();
 
-        try {
+        try (
             Connection connection = DriverManager.getConnection(connectionString);
 
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT ArtistId, Name FROM Artist ORDER BY Name ASC");
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Long id = resultSet.getLong("ArtistId");
@@ -61,6 +61,8 @@ public class ArtistDAO {
             
         } catch (SQLException e) {
             // TODO: handle exception
+                e.printStackTrace();
+
         }
 
         /*
@@ -101,14 +103,15 @@ public class ArtistDAO {
          * make tests run against your actual database, which may have unexpected data.
          */
 
-         try {
+         try (
             Connection connection = DriverManager.getConnection(connectionString);
 
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT ArtistId, Name FROM Artist WHERE ArtistId = ? ORDER BY Name ASC");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT ArtistId, Name FROM Artist WHERE ArtistId = ? ORDER BY Name ASC")) {
+            
 
             preparedStatement.setLong(1, id);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
 
             if (resultSet.next()) {
                 Long artistId = resultSet.getLong("ArtistId");
@@ -119,13 +122,15 @@ public class ArtistDAO {
 
                 return artist;
             }
-
-
-            
-            
-        } catch (SQLException e) {
-            // TODO: handle exception
         }
-        return null;
+        
+        
+        
+    } catch (SQLException e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } 
+    return null;
     }
 }
+
