@@ -34,8 +34,17 @@ public class ArtistDAO {
     /**
      * Returns a list of all artists in the database. The list is ordered by artist
      * name. If there are no artists in the database, an empty list is returned.
+    *
+    * @return a list of all artists in the database.
+    */
+    /*
+     * hint: see the class from part 1 for an example of how to connect to the
+     * database and retrieve data from it. This time create new Artist objects
+     * instead of printing the results to the console.
      *
-     * @return a list of all artists in the database.
+     * Note that you must use the `connectionString` field in this class to connect
+     * to the database. You can't "hard code" the connection string, as that would
+     * make tests run against your actual database, which may have unexpected data.
      */
     public List<Artist> getArtists() {
         List<Artist> artists = new ArrayList<>();
@@ -43,7 +52,7 @@ public class ArtistDAO {
         try (
             Connection connection = DriverManager.getConnection(connectionString);
 
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT ArtistId, Name FROM Artist ORDER BY Name ASC");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT ArtistId, Name FROM Artist, ORDER BY Name ASC");
 
             ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -65,15 +74,6 @@ public class ArtistDAO {
 
         }
 
-        /*
-         * hint: see the class from part 1 for an example of how to connect to the
-         * database and retrieve data from it. This time create new Artist objects
-         * instead of printing the results to the console.
-         *
-         * Note that you must use the `connectionString` field in this class to connect
-         * to the database. You can't "hard code" the connection string, as that would
-         * make tests run against your actual database, which may have unexpected data.
-         */
 
         return artists;
     }
