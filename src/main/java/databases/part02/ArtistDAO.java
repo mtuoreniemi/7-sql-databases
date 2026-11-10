@@ -1,7 +1,13 @@
 package databases.part02;
 
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 
 /**
  * Data Access Object for the Artist table in the Chinook database.
@@ -33,6 +39,29 @@ public class ArtistDAO {
      */
     public List<Artist> getArtists() {
         List<Artist> artists = new ArrayList<>();
+
+        try {
+            Connection connection = DriverManager.getConnection(connectionString);
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT ArtistId, Name FROM Artist ORDER BY Name ASC");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Long id = resultSet.getLong("ArtistId");
+                String name = resultSet.getString("Name");
+
+                Artist artist = new Artist(id, name);
+                artists.add(artist);
+            }
+
+
+
+            
+            
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
 
         /*
          * hint: see the class from part 1 for an example of how to connect to the
