@@ -100,6 +100,32 @@ public class ArtistDAO {
          * to the database. You can't "hard code" the connection string, as that would
          * make tests run against your actual database, which may have unexpected data.
          */
+
+         try {
+            Connection connection = DriverManager.getConnection(connectionString);
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT ArtistId, Name FROM Artist WHERE ArtistId = ? ORDER BY Name ASC");
+
+            preparedStatement.setLong(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Long artistId = resultSet.getLong("ArtistId");
+                String name = resultSet.getString("Name");
+
+                Artist artist = new Artist(artistId, name);
+
+
+                return artist;
+            }
+
+
+            
+            
+        } catch (SQLException e) {
+            // TODO: handle exception
+        }
         return null;
     }
 }
